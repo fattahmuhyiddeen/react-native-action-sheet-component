@@ -13,13 +13,17 @@ const ACTION_SHEET_OPENED: string = 'opened';
 const ACTION_SHEET_CLOSING: string = 'closing';
 const ACTION_SHEET_CLOSED: string = 'closed';
 
-const DEFAULT_ANIMATION_DURATION: number = 180;
+// screen height
+const WINDOW_HEIGHT = Dimensions.get('window').height;
+const WINDOW_HEIGHT_HALF = WINDOW_HEIGHT / 2;
+
+const DEFAULT_ANIMATION_DURATION: number = WINDOW_HEIGHT_HALF;
 
 // action sheet positions
-const INITIAL_POSITION_BOTTOM: number = -180;
+const INITIAL_POSITION_BOTTOM: number = -WINDOW_HEIGHT_HALF;
 const INITIAL_POSITION_TOP: number = 0;
-const TO_POSITION_BOTTOM: number = 180;
-const TO_POSITION_TOP: number = -360;
+const TO_POSITION_BOTTOM: number = WINDOW_HEIGHT_HALF;
+const TO_POSITION_TOP: number = -WINDOW_HEIGHT;
 
 // events
 const HARDWARE_BACK_PRESS_EVENT: string = 'hardwareBackPress';
