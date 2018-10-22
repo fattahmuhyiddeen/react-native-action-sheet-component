@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, Children, cloneElement, type ReactElement } from 'react';
-import { View, Animated, Easing, StyleSheet, ScrollView, Dimensions, BackAndroid } from 'react-native';
+import { View, Animated, Easing, StyleSheet, ScrollView, Dimensions, BackHandler } from 'react-native';
 import AnimatedOverlay from 'react-native-animated-overlay';
 import _ from 'lodash';
 
@@ -25,8 +25,6 @@ const INITIAL_POSITION_TOP: number = 0;
 const TO_POSITION_BOTTOM: number = WINDOW_HEIGHT_HALF;
 const TO_POSITION_TOP: number = -WINDOW_HEIGHT;
 
-// events
-const HARDWARE_BACK_PRESS_EVENT: string = 'hardwareBackPress';
 
 const styles = StyleSheet.create({
   containerTop: {
@@ -77,14 +75,14 @@ type Props = {
 };
 
 const defaultProps = {
-  onShow: () => {},
-  onHide: () => {},
+  onShow: () => { },
+  onHide: () => { },
   show: false,
   animationDuration: DEFAULT_ANIMATION_DURATION,
   overlayOpacity: 0.3,
   position: 'bottom',
   style: null,
-  onChange: () => {},
+  onChange: () => { },
   multiple: false,
   showSparator: true,
   showSelectedIcon: true,
@@ -124,7 +122,7 @@ class ActionSheet extends Component {
       this.show();
     }
 
-    BackAndroid.addEventListener(HARDWARE_BACK_PRESS_EVENT, this.hardwareBackPressHandler);
+    BackHandler.addEventListener('hardwareBackPress', this.hardwareBackPressHandler);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -149,7 +147,7 @@ class ActionSheet extends Component {
   }
 
   componentWillUnmount() {
-    BackAndroid.removeEventListener(HARDWARE_BACK_PRESS_EVENT);
+    BackHandler.removeEventListener('hardwareBackPress', this.hardwareBackPressHandler);
     this.hide();
   }
 
@@ -159,7 +157,7 @@ class ActionSheet extends Component {
     }
   }
 
-  setActionSheetState(toValue: number, callback?: Function = () => {}): void {
+  setActionSheetState(toValue: number, callback?: Function = () => { }): void {
     const { animationDuration: duration } = this.props;
     const isClosed = (this.state.actionSheetState === ACTION_SHEET_CLOSED);
     let actionSheetState = isClosed ? ACTION_SHEET_OPENING : ACTION_SHEET_CLOSING;
@@ -172,13 +170,13 @@ class ActionSheet extends Component {
       useNativeDriver: true,
       easing: Easing.inOut(Easing.quad),
     })
-    .start(() => {
-      const isClosing = (this.state.actionSheetState === ACTION_SHEET_CLOSING);
-      actionSheetState = isClosing ? ACTION_SHEET_CLOSED : ACTION_SHEET_OPENED;
+      .start(() => {
+        const isClosing = (this.state.actionSheetState === ACTION_SHEET_CLOSING);
+        actionSheetState = isClosing ? ACTION_SHEET_CLOSED : ACTION_SHEET_OPENED;
 
-      this.setState({ actionSheetState });
-      callback();
-    });
+        this.setState({ actionSheetState });
+        callback();
+      });
   }
 
   hardwareBackPressHandler = (): boolean => {
@@ -199,7 +197,7 @@ class ActionSheet extends Component {
     }
   }
 
-  show = (callback?: Function = () => {}): void => {
+  show = (callback?: Function = () => { }): void => {
     if ([ACTION_SHEET_OPENING, ACTION_SHEET_OPENED].includes(this.state.actionSheetState)) {
       return;
     }
@@ -216,7 +214,7 @@ class ActionSheet extends Component {
     });
   }
 
-  hide = (callback?: Function = () => {}): void => {
+  hide = (callback?: Function = () => { }): void => {
     if ([ACTION_SHEET_CLOSING, ACTION_SHEET_CLOSED].includes(this.state.actionSheetState)) {
       return;
     }
@@ -323,8 +321,8 @@ class ActionSheet extends Component {
       : null;
 
     const actionSheetStyle = isTop
-       ? styles.containerTop
-       : styles.containerBottom;
+      ? styles.containerTop
+      : styles.containerBottom;
 
     return (
       <View style={[styles.container]}>
